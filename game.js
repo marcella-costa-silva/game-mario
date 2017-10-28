@@ -8,7 +8,7 @@ canvas.height = 480;
 document.body.appendChild(canvas);
 
 /**
- * bgImage.onload, heroImage, monsterImage : só vai começar o jogo quando 
+ * bgImage.onload, marioImage, starImage : só vai começar o jogo quando 
  * as imagens forem carregadas.
  */
 
@@ -21,27 +21,27 @@ bgImage.onload = function () {
 bgImage.src = 'images/background.png';
 
 // Imgaem do Mário
-var heroReady = false; // boneco pronto
-var heroImage = new Image();
-heroImage.onload = function () {
-	heroReady = true;
+var marioReady = false; // boneco pronto
+var marioImage = new Image();
+marioImage.onload = function () {
+	marioReady = true;
 };
-heroImage.src = 'images/mario.png';
+marioImage.src = 'images/mario.png';
 
 // Imagem da Estrela
-var monsterReady = false;
-var monsterImage = new Image();
-monsterImage.onload = function () {
-	monsterReady = true;
+var starReady = false;
+var starImage = new Image();
+starImage.onload = function () {
+	starReady = true;
 };
-monsterImage.src = 'images/star.png';
+starImage.src = 'images/star.png';
 
 // Objetos do Jogo
-var hero = {
+var mario = {
 	speed: 256 // movimento em pixels por segundo
 };
-var monster = {};
-var monsterCaught = 0;
+var star = {};
+var starCaught = 0;
 
 // Controle do Teclado
 var keysDown = {}; // tecla presionada
@@ -58,35 +58,35 @@ window.addEventListener('keyup', function (e) {
 
 // Reseta o jogo quando o Mário pega a estrela
 var reset = function reset() {
-	hero.x = canvas.width / 2;
-	hero.y = canvas.height / 2;
+	mario.x = canvas.width / 2;
+	mario.y = canvas.height / 2;
 
 	// Posiciona a estrela randomicamente na tela
-	monster.x = 32 + Math.random() * (canvas.width - 64);
-	monster.y = 32 + Math.random() * (canvas.height - 64);
+	star.x = 32 + Math.random() * (canvas.width - 64);
+	star.y = 32 + Math.random() * (canvas.height - 64);
 };
 
 // Atualiza os objetos do jogo
 var update = function update(modifier) {
 	if (38 in keysDown) {
-		hero.y -= hero.speed * modifier; // pressionando a seta para cima
+		mario.y -= mario.speed * modifier; // pressionando a seta para cima
 	}
 
 	if (40 in keysDown) {
-		hero.y += hero.speed * modifier; // pressionando a seta para baixo
+		mario.y += mario.speed * modifier; // pressionando a seta para baixo
 	}
 
 	if (37 in keysDown) {
-		hero.x -= hero.speed * modifier; // pressionando a seta para esquerda
+		mario.x -= mario.speed * modifier; // pressionando a seta para esquerda
 	}
 
 	if (39 in keysDown) {
-		hero.x += hero.speed * modifier; // pressionando a seta para direita
+		mario.x += mario.speed * modifier; // pressionando a seta para direita
 	}
 
 	// Os personagens se encostaram
-	if (hero.x <= monster.x + 32 && monster.x <= hero.x + 32 && hero.y <= monster.y + 32 && monster.y <= hero.y + 32) {
-		++monsterCaught;
+	if (mario.x <= star.x + 32 && star.x <= mario.x + 32 && mario.y <= star.y + 32 && star.y <= mario.y + 32) {
+		++starCaught;
 		reset();
 	}
 };
@@ -97,12 +97,12 @@ var render = function render() {
 		ctx.drawImage(bgImage, 0, 0);
 	}
 
-	if (heroReady) {
-		ctx.drawImage(heroImage, hero.x, hero.y);
+	if (marioReady) {
+		ctx.drawImage(marioImage, mario.x, mario.y);
 	}
 
-	if (monsterReady) {
-		ctx.drawImage(monsterImage, monster.x, monster.y);
+	if (starReady) {
+		ctx.drawImage(starImage, star.x, star.y);
 	}
 
 	// Pontuação
@@ -110,7 +110,7 @@ var render = function render() {
 	ctx.font = '24px Helvetica';
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'top';
-	ctx.fillText('Estrelas pegas: ' + monsterCaught, 32, 32);
+	ctx.fillText('Estrelas pegas: ' + starCaught, 32, 32);
 };
 
 // Controla o loop do jogo
